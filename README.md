@@ -1,24 +1,25 @@
-# Exact Match Display
+# PRAVAAH-X
 
-Implement exactly the screenshot and nothing else
+**Predict. Trace. Respond.**
 
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/a5780f49-83ea-49b4-8653-4a4a63b7369f).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+Atmospheric intelligence platform for detecting emerging hyper-local pollution events, combining multiple environmental signals, forecasting how pollution may move, and providing evidence-based response intelligence.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
+git clone https://github.com/Akshatr08/Pravaah-x.git
+cd Pravaah-x
 npm i
 npm run dev
 ```
+
+## Stack
+
+- **Frontend**: React + TanStack Start + Tailwind CSS
+- **Backend**: FastAPI (Python)
+- **AI**: Google Gemini
+- **Database**: PostgreSQL / SQLite
+
+## License
+
+MIT
