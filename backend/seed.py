@@ -1,6 +1,6 @@
 import json
-from .database import SessionLocal, engine
-from . import models
+from database import SessionLocal, engine
+import models
 
 models.Base.metadata.create_all(bind=engine)
 
