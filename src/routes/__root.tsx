@@ -124,8 +124,19 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="flex min-h-screen flex-col">
+        <SiteHeader />
+        <main className="flex-1">
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </main>
+        <footer className="border-t border-border">
+          <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4 px-6 py-8">
+            <p className="label-xs">PRAVAAH-X · Predict. Trace. Respond.</p>
+            <p className="label-xs">All data on this build is simulated</p>
+          </div>
+        </footer>
+      </div>
     </QueryClientProvider>
   );
 }
