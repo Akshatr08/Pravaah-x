@@ -37,8 +37,8 @@ function NetworkPage() {
       <div className="mt-10 rounded-xl border border-border bg-surface px-6 py-8">
         <svg viewBox="0 0 1000 400" className="h-[400px] w-full" role="img" aria-label="Regional node network">
           {regionLinks.map(([a, b], i) => {
-            const p = layout[a];
-            const q = layout[b];
+            const p = layout[a] ?? { x: 0, y: 0 };
+            const q = layout[b] ?? { x: 0, y: 0 };
             return (
               <g key={`${a}-${b}`}>
                 <line x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke="var(--color-border-strong)" strokeWidth="0.8" />
@@ -57,7 +57,7 @@ function NetworkPage() {
           })}
 
           {regions.map((r) => {
-            const p = layout[r.id];
+            const p = layout[r.id] ?? { x: 0, y: 0 };
             return (
               <g key={r.id}>
                 <circle cx={p.x} cy={p.y} r="22" fill="var(--color-background)" stroke="var(--color-border)" />
