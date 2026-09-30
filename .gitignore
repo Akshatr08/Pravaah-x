@@ -7,6 +7,14 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Python / Backend
+venv/
+__pycache__/
+*.pyc
+*.sqlite3
+pravaah.db
+.env
+
 node_modules
 dist
 dist-ssr

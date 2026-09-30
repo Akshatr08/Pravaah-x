@@ -1,18 +1,15 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Camera, Mic, Type, Gauge, Check } from "lucide-react";
+import { Camera, Mic, Type, Gauge, Check, Loader2 } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PageHeader, Section, DemoBadge } from "@/components/Primitives";
+import { submitReport } from "@/lib/api";
 
 export const Route = createFileRoute("/citizen")({
   head: () => ({
     meta: [
       { title: "Citizen Intelligence — PRAVAAH-X" },
-      {
-        name: "description",
-        content: "Add local evidence to the atmospheric intelligence network with photo, voice, text or sensor readings.",
-      },
-      { property: "og:title", content: "Citizen Intelligence — PRAVAAH-X" },
-      { property: "og:description", content: "See something unusual? Report a local atmospheric event." },
+      { name: "description", content: "Add local evidence to the atmospheric intelligence network with photo, voice, text or sensor readings." },
     ],
   }),
   component: CitizenPage,
@@ -35,7 +32,31 @@ function CitizenPage() {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<(typeof modes)[number]["id"]>("photo");
   const [note, setNote] = useState("");
+  const [sensorValue, setSensorValue] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: submitReport,
+    onSuccess: () => {
+      setSubmitted(true);
+      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["reports"] });
+    },
+    onError: (err) => {
+      console.error("Failed to submit report:", err);
+      // In a real app we'd show a toast error
+    }
+  });
+
+  const handleSubmit = () => {
+    mutation.mutate({
+      location_name: "Panipat, Haryana",
+      report_type: mode,
+      text_content: note || undefined,
+      sensor_value: mode === "sensor" && sensorValue ? parseFloat(sensorValue) : undefined,
+    });
+  };
 
   return (
     <Section className="py-16">
@@ -103,6 +124,8 @@ function CitizenPage() {
                   <input
                     className="mt-5 w-full rounded-lg border border-border bg-background px-4 py-3 text-[0.875rem] outline-none focus:border-primary"
                     placeholder="PM2.5 value, µg/m³"
+                    value={sensorValue}
+                    onChange={(e) => setSensorValue(e.target.value)}
                   />
                 )}
 
@@ -124,19 +147,18 @@ function CitizenPage() {
                       Cancel
                     </button>
                     <button
-                      onClick={() => {
-                        setSubmitted(true);
-                        setOpen(false);
-                      }}
-                      className="rounded-md bg-primary px-4 py-2 text-[0.8125rem] text-primary-foreground transition-opacity hover:opacity-90"
+                      onClick={handleSubmit}
+                      disabled={mutation.isPending}
+                      className="rounded-md bg-primary px-4 py-2 text-[0.8125rem] text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
                     >
-                      Submit report
+                      {mutation.isPending ? "Submitting..." : "Submit report"}
                     </button>
                   </div>
                 </div>
               </div>
             </div>
           )}
+
 
           {submitted && (
             <div className="rise-in rounded-xl border border-border bg-surface px-7 py-8">

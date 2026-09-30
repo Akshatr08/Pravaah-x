@@ -1,25 +1,15 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Section } from "@/components/Primitives";
-import { demoEvents, severityLabel } from "@/lib/demo-data";
+import { severityLabel } from "@/lib/demo-data";
+import { fetchEvent } from "@/lib/api";
 
 export const Route = createFileRoute("/events/$eventId")({
-  loader: ({ params }) => {
-    const event = demoEvents.find((e) => e.id === params.eventId);
-    if (!event) throw notFound();
-    return { event };
-  },
-  head: ({ loaderData }) => {
-    if (!loaderData) {
-      return { meta: [{ title: "Event not found — PRAVAAH-X" }, { name: "robots", content: "noindex" }] };
-    }
-    const { event } = loaderData;
-    const description = `${event.title} tracked along ${event.corridor}. Current ${event.current}, projected ${event.projected6h} in six hours.`;
+  head: ({ match }) => {
+    const eventId = match.params.eventId;
     return {
       meta: [
-        { title: `${event.id} · ${event.corridor} — PRAVAAH-X` },
-        { name: "description", content: description },
-        { property: "og:title", content: `${event.id} · ${event.corridor}` },
-        { property: "og:description", content: description },
+        { title: `${eventId} — PRAVAAH-X` },
       ],
     };
   },
@@ -39,7 +29,19 @@ function EventNotFound() {
 }
 
 function EventDetail() {
-  const { event } = Route.useLoaderData();
+  const { eventId } = Route.useParams();
+  const { data: event, isLoading, isError } = useQuery({
+    queryKey: ["event", eventId],
+    queryFn: () => fetchEvent(eventId),
+  });
+
+  if (isLoading) {
+    return <Section className="py-16"><div className="text-muted-foreground">Loading event...</div></Section>;
+  }
+
+  if (isError || !event) {
+    return <EventNotFound />;
+  }
 
   return (
     <Section className="py-16">
@@ -61,9 +63,9 @@ function EventDetail() {
       </div>
 
       <div className="mt-10 grid gap-px bg-border sm:grid-cols-4">
-        <Stat label="Detected" value={event.detected} />
-        <Stat label="Current" value={String(event.current)} big />
-        <Stat label="Projected 6h" value={String(event.projected6h)} big />
+        <Stat label="Detected" value={new Date(event.detected_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} />
+        <Stat label="Current" value={String(event.current_measurement)} big />
+        <Stat label="Projected 6h" value={String(event.projected_6h)} big />
         <Stat label="Movement" value={event.movement} />
       </div>
 
@@ -129,7 +131,7 @@ function EventDetail() {
         <div>
           <p className="label-xs">Signals</p>
           <ul className="mt-5 divide-y divide-border border-y border-border">
-            {event.signals.map((s) => (
+            {event.signals?.map((s: any) => (
               <li key={s.label} className="flex items-center justify-between gap-6 py-4">
                 <div>
                   <p className="text-[0.875rem] text-foreground">{s.label}</p>

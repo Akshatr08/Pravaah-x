@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { AtmosphericMap } from "@/components/AtmosphericMap";
 import { EventPanel } from "@/components/EventPanel";
 import { DemoBadge, LiveBadge, Section } from "@/components/Primitives";
-import { dataSources, demoEvents, severityLabel } from "@/lib/demo-data";
+import { dataSources, severityLabel } from "@/lib/demo-data";
+import { fetchEvents } from "@/lib/api";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,7 +28,13 @@ export const Route = createFileRoute("/")({
 
 function CommandCenter() {
   const [selected, setSelected] = useState<string | null>("PRV-1042");
-  const activeEvent = demoEvents.find((e) => e.id === selected) ?? null;
+  
+  const { data: events = [], isLoading } = useQuery({
+    queryKey: ["events"],
+    queryFn: fetchEvents,
+  });
+
+  const activeEvent = events.find((e: any) => e.id === selected) ?? null;
 
   return (
     <div className="pb-28">
@@ -46,19 +54,24 @@ function CommandCenter() {
         <div className="relative overflow-hidden rounded-xl border border-border bg-surface">
           <div className="grid lg:grid-cols-[1fr_auto]">
             <AtmosphericMap
+              events={events.map((e: any) => ({
+                ...e,
+                origin: { x: e.origin_x, y: e.origin_y, name: e.origin_name },
+                target: { x: e.target_x, y: e.target_y, name: e.target_name }
+              }))}
               selectedId={selected}
-              onSelect={(e) => setSelected(e.id)}
+              onSelect={(e: any) => setSelected(e.id)}
               className="min-h-[560px] px-6 py-4"
             />
             <aside className="border-t border-border lg:w-[22rem] lg:border-l lg:border-t-0">
               <div className="flex items-center justify-between px-5 py-4">
                 <p className="label-xs">Active events</p>
                 <span className="numeric text-[0.75rem] text-muted-foreground">
-                  {demoEvents.length}
+                  {events.length}
                 </span>
               </div>
               <ul className="border-t border-border">
-                {demoEvents.map((e) => (
+                {events.map((e: any) => (
                   <li key={e.id}>
                     <button
                       onClick={() => setSelected(e.id)}
@@ -74,9 +87,9 @@ function CommandCenter() {
                       </span>
                       <span className="text-right">
                         <span className="numeric block text-[1.125rem] text-foreground">
-                          {e.current}
+                          {e.current_measurement}
                         </span>
-                        <span className="label-xs mt-1 block">{severityLabel[e.severity]}</span>
+                        <span className="label-xs mt-1 block">{severityLabel[e.severity as keyof typeof severityLabel] || e.severity}</span>
                       </span>
                     </button>
                   </li>

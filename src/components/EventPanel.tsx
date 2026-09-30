@@ -7,7 +7,8 @@ const severityClass: Record<DemoEvent["severity"], string> = {
   watch: "text-primary border-primary/25 bg-primary/8",
 };
 
-export function EventPanel({ event, onClose }: { event: DemoEvent; onClose?: () => void }) {
+export function EventPanel({ event, onClose }: { event: any; onClose?: () => void }) {
+  const severityStr = event.severity as keyof typeof severityClass;
   return (
     <div className="panel w-[21rem] rounded-xl shadow-panel rise-in">
       <div className="flex items-start justify-between gap-3 px-5 pt-4">
@@ -16,25 +17,25 @@ export function EventPanel({ event, onClose }: { event: DemoEvent; onClose?: () 
           <p className="mt-1 text-[0.8125rem] text-muted-foreground">{event.title}</p>
         </div>
         <span
-          className={`rounded border px-1.5 py-0.5 text-[0.625rem] tracking-[0.1em] ${severityClass[event.severity]}`}
+          className={`rounded border px-1.5 py-0.5 text-[0.625rem] tracking-[0.1em] ${severityClass[severityStr]}`}
         >
-          {severityLabel[event.severity]}
+          {severityLabel[severityStr as keyof typeof severityLabel] || event.severity}
         </span>
       </div>
 
       <p className="px-5 pt-3 text-[0.9375rem] tracking-tight text-foreground">{event.corridor}</p>
 
       <div className="mt-4 grid grid-cols-2 gap-px border-y border-border bg-border">
-        <Metric label="Detected" value={event.detected} />
+        <Metric label="Detected" value={new Date(event.detected_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} />
         <Metric label="Movement" value={event.movement} />
-        <Metric label="Current" value={String(event.current)} big />
-        <Metric label="Projected 6h" value={String(event.projected6h)} big />
+        <Metric label="Current" value={String(event.current_measurement)} big />
+        <Metric label="Projected 6h" value={String(event.projected_6h)} big />
       </div>
 
       <div className="px-5 py-4">
         <p className="label-xs">Signals</p>
         <ul className="mt-3 space-y-2.5">
-          {event.signals.map((s) => (
+          {event.signals?.map((s: any) => (
             <li key={s.label} className="flex items-center gap-3">
               <span className="w-28 shrink-0 text-[0.75rem] text-foreground">{s.label}</span>
               <span className="h-px flex-1 bg-border">
