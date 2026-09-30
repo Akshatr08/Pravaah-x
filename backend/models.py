@@ -46,6 +46,13 @@ class CitizenReport(Base):
     report_type = Column(String) # photo, voice, text, sensor
     text_content = Column(String, nullable=True)
     sensor_value = Column(Float, nullable=True)
+    image_path = Column(String, nullable=True)
+    
+    # AI Analysis fields
+    ai_analysis = Column(String, nullable=True)
+    extracted_signals = Column(String, nullable=True) # Stored as JSON string
+    confidence = Column(Float, nullable=True)
+    
     event_id = Column(String, ForeignKey("events.id"), nullable=True)
 
     event = relationship("Event", back_populates="reports")
