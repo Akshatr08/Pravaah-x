@@ -110,7 +110,7 @@ function EventDetail() {
             SOURCE
           </text>
           <text x="150" y="214" textAnchor="middle" fontSize="13" fill="var(--color-foreground)">
-            {event.origin.name}
+            {event.origin_name}
           </text>
 
           <text x="505" y="70" textAnchor="middle" fontSize="11" letterSpacing="2" fill="var(--color-muted-foreground)">
@@ -122,7 +122,7 @@ function EventDetail() {
             DOWNSTREAM REGION
           </text>
           <text x="860" y="214" textAnchor="middle" fontSize="13" fill="var(--color-foreground)">
-            {event.target.name}
+            {event.target_name}
           </text>
         </svg>
       </div>
@@ -148,7 +148,7 @@ function EventDetail() {
           <p className="label-xs">Interpretation</p>
           <p className="mt-5 text-[0.9375rem] leading-relaxed text-muted-foreground">
             Combined signal confidence is {Math.round(event.confidence * 100)}%. The corridor between{" "}
-            {event.origin.name} and {event.target.name} is aligned with prevailing wind, so downstream
+            {event.origin_name} and {event.target_name} is aligned with prevailing wind, so downstream
             concentration is expected to rise before dispersion begins.
           </p>
           <p className="mt-5 text-[0.8125rem] leading-relaxed text-muted-foreground">
