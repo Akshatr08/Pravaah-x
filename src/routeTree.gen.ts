@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CitizenRouteImport } from './routes/citizen'
+import { Route as ForecastRouteImport } from './routes/forecast'
+import { Route as NetworkRouteImport } from './routes/network'
+import { Route as PlumeRouteImport } from './routes/plume'
+import { Route as EventsIndexRouteImport } from './routes/events.index'
+import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CitizenRoute = CitizenRouteImport.update({
+  id: '/citizen',
+  path: '/citizen',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForecastRoute = ForecastRouteImport.update({
+  id: '/forecast',
+  path: '/forecast',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NetworkRoute = NetworkRouteImport.update({
+  id: '/network',
+  path: '/network',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlumeRoute = PlumeRouteImport.update({
+  id: '/plume',
+  path: '/plume',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsIndexRoute = EventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsEventIdRoute = EventsEventIdRouteImport.update({
+  id: '/events/$eventId',
+  path: '/events/$eventId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/citizen': typeof CitizenRoute
+  '/forecast': typeof ForecastRoute
+  '/network': typeof NetworkRoute
+  '/plume': typeof PlumeRoute
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/events/': typeof EventsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/citizen': typeof CitizenRoute
+  '/forecast': typeof ForecastRoute
+  '/network': typeof NetworkRoute
+  '/plume': typeof PlumeRoute
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/events': typeof EventsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/citizen': typeof CitizenRoute
+  '/forecast': typeof ForecastRoute
+  '/network': typeof NetworkRoute
+  '/plume': typeof PlumeRoute
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/events/': typeof EventsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/citizen'
+    | '/forecast'
+    | '/network'
+    | '/plume'
+    | '/events/$eventId'
+    | '/events/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/citizen'
+    | '/forecast'
+    | '/network'
+    | '/plume'
+    | '/events/$eventId'
+    | '/events'
+  id:
+    | '__root__'
+    | '/'
+    | '/citizen'
+    | '/forecast'
+    | '/network'
+    | '/plume'
+    | '/events/$eventId'
+    | '/events/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CitizenRoute: typeof CitizenRoute
+  ForecastRoute: typeof ForecastRoute
+  NetworkRoute: typeof NetworkRoute
+  PlumeRoute: typeof PlumeRoute
+  EventsEventIdRoute: typeof EventsEventIdRoute
+  EventsIndexRoute: typeof EventsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/citizen': {
+      id: '/citizen'
+      path: '/citizen'
+      fullPath: '/citizen'
+      preLoaderRoute: typeof CitizenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forecast': {
+      id: '/forecast'
+      path: '/forecast'
+      fullPath: '/forecast'
+      preLoaderRoute: typeof ForecastRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/network': {
+      id: '/network'
+      path: '/network'
+      fullPath: '/network'
+      preLoaderRoute: typeof NetworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plume': {
+      id: '/plume'
+      path: '/plume'
+      fullPath: '/plume'
+      preLoaderRoute: typeof PlumeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/': {
+      id: '/events/'
+      path: '/events'
+      fullPath: '/events/'
+      preLoaderRoute: typeof EventsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/$eventId': {
+      id: '/events/$eventId'
+      path: '/events/$eventId'
+      fullPath: '/events/$eventId'
+      preLoaderRoute: typeof EventsEventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CitizenRoute: CitizenRoute,
+  ForecastRoute: ForecastRoute,
+  NetworkRoute: NetworkRoute,
+  PlumeRoute: PlumeRoute,
+  EventsEventIdRoute: EventsEventIdRoute,
+  EventsIndexRoute: EventsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
